@@ -2,7 +2,7 @@ local GameContainer = require "game_container"
 
 local width, height = love.graphics.getDimensions()
 
-local GameContainer1 = GameContainer:new(width - 20, height - 20, 10, 10)
+local GameContainer1 = GameContainer:new(width - 20, height - 30, 10, 10)
 
 local console = {} -- Table to store console messages
 
