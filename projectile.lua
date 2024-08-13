@@ -1,4 +1,5 @@
 local Projectile = {}
+
 Projectile.__index = Projectile
 
 function Projectile:new(x, y, direction, speed, size)
@@ -24,7 +25,9 @@ function Projectile:update(dt)
 end
 
 function Projectile:draw()
+    love.graphics.setColor(1, 0, 0)  -- Set color to red (R, G, B with values between 0 and 1)
     love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+    love.graphics.setColor(1, 1, 1)  -- Reset color to white (default color)
 end
 
 return Projectile

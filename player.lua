@@ -16,6 +16,7 @@ function Player:new(x, y, images, speed, scale)
     self.frameDuration = 0.1
     self.imageSet = images
     self.projectiles = {}
+    self.sound = love.audio.newSource("laser.mp3", "static")
     return self
 end
 
@@ -51,6 +52,7 @@ function Player:update(dt)
     end
 
     if love.keyboard.isDown('space') then
+        self.sound:play()
         self:shoot()
     end
 
