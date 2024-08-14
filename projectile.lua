@@ -1,3 +1,6 @@
+
+--shooting projectiles from the player
+
 local Projectile = {}
 
 Projectile.__index = Projectile

@@ -89,8 +89,15 @@ function Player:draw()
     end
 end
 
+
+--this is where the projectile is created. an object is created everytime a player shoots something
+--have fun with this :)
+--next step is to add missle sprites or laser sprites :D
+-- saif bayyari
+--8/13/2024
+
 function Player:shoot()
-    local projectile = Projectile:new(self.x, self.y, self.direction, 400, 10)
+    local projectile = Projectile:new(self.x, self.y, self.direction, 1000, 10)
     table.insert(self.projectiles, projectile)
 end
 
