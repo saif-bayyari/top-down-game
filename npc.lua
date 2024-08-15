@@ -1,3 +1,5 @@
+
+
 local NPC = {}
 NPC.__index = NPC
 

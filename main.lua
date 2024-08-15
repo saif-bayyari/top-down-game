@@ -16,8 +16,14 @@ function love.load()
         left = loadImages("man/sideways", 22, 32),
         right = loadImages("man/sideways", 22, 32)
     }
+    local pacmanImages = {
+        up = loadImages("pacman/down", 0, 0),
+        down = loadImages("pacman/down", 0, 0),
+        left = loadImages("pacman/down", 0, 0),
+        right = loadImages("pacman/down", 0, 0)
+    }
     player = Player:new(400, 300, playerImages, 200, 2)
-    npc = NPC:new(100, 100, playerImages, 200, 2)
+    npc = NPC:new(100, 100, pacmanImages, 200, 2)
     npc:setBehavior('follow', player)
     scene1 = Scene:new("scene1", {player, npc})
     scene2 = Scene:new("scene2", {})
