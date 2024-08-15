@@ -1,7 +1,3 @@
-
--- you run the game by double clicking the run.bat executable :)
-
-
 local Player = require "Player"
 local Scene = require "Scene"
 local NPC = require("NPC")
@@ -17,17 +13,28 @@ function love.load()
     player = Player:new(400, 300, playerImages, 200, 2)
     npc = NPC:new(100, 100, playerImages, 200, 2)
     npc:setBehavior('follow', player)
-    scene1 = Scene:new("scene1", {player,npc})
-    
+    scene1 = Scene:new("scene1", {player, npc})
+    scene2 = Scene:new("scene2", {})
+
+    game_sequence = {scene1, scene2}
+    current_scene = 1 -- Start with scene1
 end
 
 function love.update(dt)
-    scene1:update(dt)
+    -- Switch to scene2 when spacebar is pressed
+    if love.keyboard.isDown("space") then
+        current_scene = 2
+    end
+
+    -- Update the current scene
+    game_sequence[current_scene]:update(dt)
 end
 
 function love.draw()
-    love.graphics.clear(0.5, 0.7, 0.9, 1) --this is how you change the background color of the main screen
-    scene1:draw()
+    love.graphics.clear(0.5, 0.7, 0.9, 1) -- This is how you change the background color of the main screen
+
+    -- Draw the current scene
+    game_sequence[current_scene]:draw()
 end
 
 function loadImages(folder, startFrame, endFrame)
