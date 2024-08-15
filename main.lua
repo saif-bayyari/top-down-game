@@ -36,7 +36,7 @@ end
 function love.update(dt)
     -- Switch to scene2 when spacebar is pressed
     if love.keyboard.isDown("lshift") then
-        current_scene = 2
+        npc:setBehavior("patrol")
     end
 
     -- Update the current scene
