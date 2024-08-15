@@ -1,15 +1,12 @@
---we need to cover the screen
---a scene is either a "game" (game_container) or a "menu slide"
---we need to implement this code
 -- Define the Scene class
 local Scene = {}
 Scene.__index = Scene
 
 -- Constructor
-function Scene:new(name)
+function Scene:new(name, objectList)
     local self = setmetatable({}, Scene)
     self.name = name or "Unnamed Scene"
-    self.objects = {}  -- A table to store objects in the scene
+    self.objects = objectList or {}  -- A table to store objects in the scene
     return self
 end
 
@@ -46,6 +43,11 @@ function Scene:draw()
     end
 end
 
+-- Method to clear all objects in the scene permanently
+function Scene:clearObjects()
+    self.objects = {}
+end
+
 -- Method to set the scene's name
 function Scene:setName(name)
     self.name = name
@@ -57,5 +59,3 @@ function Scene:getName()
 end
 
 return Scene
-
---generated with chatgpt
