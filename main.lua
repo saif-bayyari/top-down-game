@@ -4,6 +4,12 @@ local NPC = require("NPC")
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
+
+    sti = require 'libraries/sti'
+    gameMap = sti('maps/testMap.lua')
+
+
+
     local playerImages = {
         up = loadImages("man/upwards", 11, 21),
         down = loadImages("man/downwards", 0, 10),
@@ -31,7 +37,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.clear(0.5, 0.7, 0.9, 1) -- This is how you change the background color of the main screen
+    gameMap:draw() -- This is how you change the background color of the main screen
 
     -- Draw the current scene
     game_sequence[current_scene]:draw()
