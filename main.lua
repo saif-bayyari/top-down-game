@@ -23,7 +23,7 @@ function love.load()
         right = loadImages("pacman/down", 0, 0)
     }
     player = Player:new(400, 300, playerImages, 200, 2)
-    npc = NPC:new(100, 100, pacmanImages, 1000, 2)
+    npc = NPC:new(100, 100, pacmanImages, 1000, 0.5)
     --^this is where we create the pacman, higher speed means more higher shake. speed is currently 1000 as of 8/15/2024
     npc:setBehavior('follow', player)
     scene1 = Scene:new("scene1", {player, npc})
@@ -37,6 +37,8 @@ function love.update(dt)
     -- Switch to scene2 when spacebar is pressed
     if love.keyboard.isDown("lshift") then
         npc:setBehavior("patrol")
+    elseif love.keyboard.isDown("rshift") then
+        npc:setBehavior("follow", player)
     end
 
     -- Update the current scene
