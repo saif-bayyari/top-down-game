@@ -55,7 +55,11 @@ local SceneObjects = {
         
         -- Draw function
         local function draw()
-            love.graphics.clear(0.5, 0.5, 0.5)
+            love.graphics.clear(0.2, 0.2, 0.2)
+            love.graphics.setColor(1, 0, 0)
+            local arabicFont = love.graphics.newFont("Mekon-Gradient.ttf", 35)
+            love.graphics.setFont(arabicFont)
+            love.graphics.print("ViBe ChEck", 100, 100) 
         end
         
         return {
@@ -96,6 +100,7 @@ local SceneObjects = {
         
         -- Draw function
         local function draw()
+            love.graphics.setColor(1, 1, 1)
             if gameMap then
                 gameMap:draw()
             end
