@@ -41,43 +41,21 @@ local pacmanImages = {
 -- Define SceneObjects with a scene that contains a game map, player, and NPC
 local SceneObjects = {
     [1] = (function()
-        local gameMap  -- Declare gameMap as a local variable
-        local npc
-        local player
+       
 
         -- Load function
         local function load()
-            love.graphics.setDefaultFilter('nearest', 'nearest')
-            player = Player:new(400, 300, playerImages, 200, 2)
-            npc = NPC:new(100, 100, pacmanImages, 1000, 0.5)
-            npc:setBehavior('follow', player)
-            gameMap = sti('maps/testMap.lua')  -- Initialize gameMap
+          return
         end
         
         -- Update function
         local function update(dt)
-            if gameMap then
-                gameMap:update(dt)
-            end
-
-            player:update(dt)
-            npc:update(dt)
-
-            if love.keyboard.isDown("lshift") then
-                npc:setBehavior("patrol")
-            elseif love.keyboard.isDown("rshift") then
-                npc:setBehavior("follow", player)
-            end
+          return
         end
         
         -- Draw function
         local function draw()
-            if gameMap then
-                gameMap:draw()
-            end
-
-            player:draw()
-            npc:draw()
+            love.graphics.clear(0.5, 0.5, 0.5)
         end
         
         return {
