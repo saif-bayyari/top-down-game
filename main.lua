@@ -9,7 +9,7 @@ local sceneManager
 -- Initialize the SceneManager and other resources
 function love.load()
     -- Create a SceneManager instance with a name
-    sceneManager = SceneManager:new("Main Scene")
+    sceneManager = SceneManager:new("scene1")  -- Assuming "scene1" is the starting scene
 
     -- Load the initial scene
     sceneManager:load()
@@ -21,10 +21,10 @@ function love.update(dt)
     sceneManager:update(dt)
 
     -- Example: Switch to another scene when the spacebar is pressed
+    -- This part is more for manual testing; adjust or remove as needed
     if love.keyboard.isDown("space") then
         -- Assuming you have a scene with index 2
-        sceneManager.currentScene = 2
-        sceneManager:load()  -- Load the new scene
+        sceneManager:setScene("scene3")  -- Change to the desired scene
     end
 end
 
@@ -33,19 +33,3 @@ function love.draw()
     sceneManager:draw()
 end
 
--- Function to load images from a folder
-function loadImages(folder, startFrame, endFrame)
-    local images = {}
-
-    for i = startFrame, endFrame do
-        local path = string.format("%s/tile%03d.png", folder, i)
-        if love.filesystem.getInfo(path) then
-            local image = love.graphics.newImage(path)
-            table.insert(images, image)
-        else
-            print("Error: Image not found at path: " .. path)
-        end
-    end
-
-    return images
-end

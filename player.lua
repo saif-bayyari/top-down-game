@@ -2,7 +2,30 @@ local Player = {}
 Player.__index = Player
 local Projectile = require "Projectile"
 
-function Player:new(x, y, images, speed, scale)
+-- Function to load images
+local function loadImages(folder, startFrame, endFrame)
+    local images = {}
+    for i = startFrame, endFrame do
+        local path = string.format("%s/tile%03d.png", folder, i)
+        if love.filesystem.getInfo(path) then
+            local image = love.graphics.newImage(path)
+            table.insert(images, image)
+        else
+            print("Error: Image not found at path: " .. path)
+        end
+    end
+    return images
+end
+
+local images = {
+    up = loadImages("man/upwards", 11, 21),
+    down = loadImages("man/downwards", 0, 10),
+    left = loadImages("man/sideways", 22, 32),
+    right = loadImages("man/sideways", 22, 32)
+}
+
+
+function Player:new(x, y, speed, scale)
     local self = setmetatable({}, Player)
     self.x = x
     self.y = y
