@@ -99,6 +99,13 @@ local SceneObjects = {
             elseif love.keyboard.isDown("rshift") then
                 npc:setBehavior("follow", player)
             end
+
+            if player.x >= 790 then
+                player.x = 790
+            elseif player.x <= 10 then
+                player.x = 10
+            end
+            
         end
         
         -- Draw function
