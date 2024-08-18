@@ -1,5 +1,3 @@
-
-
 -- Function to load images
 local function loadImages(folder, startFrame, endFrame)
     local images = {}
@@ -15,30 +13,41 @@ local function loadImages(folder, startFrame, endFrame)
     return images
 end
 
-local images = {
-    up = loadImages("pacman/down", 0, 0),
-    down = loadImages("pacman/down", 0, 0),
-    left = loadImages("pacman/down", 0, 0),
-    right = loadImages("pacman/down", 0, 0)
+local possibleNPCS = {
+    ["pacman"] = {
+        ["initialFlip"] = 1
+    }
 }
 
+-- Table to store NPC images
+local npcImages = {}
+
+for value, _ in pairs(possibleNPCS) do
+    -- Create a table for the current NPC type
+    npcImages[value] = {
+        up = loadImages("characters/"..value .. "/down", 0, 0),
+        down = loadImages("characters/"..value .. "/down", 0, 0),
+        left = loadImages("characters/"..value .. "/down", 0, 0),
+        right = loadImages("characters/"..value .. "/down", 0, 0),
+    }
+end
 
 local NPC = {}
 NPC.__index = NPC
 
-function NPC:new(x, y,  speed, scale)
+function NPC:new(x, y, npc, speed, scale)
     local self = setmetatable({}, NPC)
     self.x = x
     self.y = y
+    self.npc = npc
     self.speed = speed or 100
     self.direction = 'down'
     self.frame = 1
-    self.images = images['down'] -- Start with the downwards images
-    self.flip = 1
+    self.images = npcImages[self.npc][self.direction] -- Start with the downwards images
+    self.flip = possibleNPCS[self.npc].initialFlip -- Initialize flip based on NPC settings
     self.scale = scale or 2
     self.timeElapsed = 0
     self.frameDuration = 0.1
-    self.imageSet = images
     self.behavior = 'patrol'  -- Default behavior
     self.target = nil  -- Target to follow, if any
     return self
@@ -60,7 +69,8 @@ function NPC:update(dt)
                 self.direction = 'down'
             end
         end
-        self.images = self.imageSet[self.direction]
+        self.images = npcImages[self.npc][self.direction]
+        self.flip = possibleNPCS[self.npc].initialFlip -- Set flip based on NPC settings
         isMoving = true
 
     elseif self.behavior == 'follow' and self.target then
@@ -68,9 +78,11 @@ function NPC:update(dt)
         if self.x < self.target.x then
             self.x = self.x + self.speed * dt
             self.direction = 'right'
+            self.flip = -1  -- Flip to face right
         elseif self.x > self.target.x then
             self.x = self.x - self.speed * dt
             self.direction = 'left'
+            self.flip = 1  -- Default orientation, facing left
         end
 
         if self.y < self.target.y then
@@ -81,7 +93,7 @@ function NPC:update(dt)
             self.direction = 'up'
         end
 
-        self.images = self.imageSet[self.direction]
+        self.images = npcImages[self.npc][self.direction]
         isMoving = true
     end
 

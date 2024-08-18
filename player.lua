@@ -17,27 +17,37 @@ local function loadImages(folder, startFrame, endFrame)
     return images
 end
 
-local images = {
-    up = loadImages("man/upwards", 11, 21),
-    down = loadImages("man/downwards", 0, 10),
-    left = loadImages("man/sideways", 22, 32),
-    right = loadImages("man/sideways", 22, 32)
+local possibleSprites = {
+    ["man"] = {
+        ["initialFlip"] = 1
+    }
 }
 
+-- Table to store Player images
+local playerImages = {}
 
-function Player:new(x, y, speed, scale)
+for spriteName, _ in pairs(possibleSprites) do
+    -- Create a table for the current player type
+    playerImages[spriteName] = {
+        ["up"] = loadImages("characters/"..spriteName .. "/up", 11, 21),
+        ["down"] = loadImages("characters/"..spriteName .. "/down", 0, 10),
+        ["sideways"] = loadImages("characters/"..spriteName .. "/sideways", 22, 32)
+    }
+end
+
+function Player:new(x, y, playerSprite, speed, scale)
     local self = setmetatable({}, Player)
+    self.playerSprite = playerSprite
     self.x = x
     self.y = y
     self.speed = speed or 200
     self.direction = 'down'
     self.frame = 1
-    self.images = images['down'] -- Start with the downwards images
-    self.flip = 1
+    self.images = playerImages[self.playerSprite][self.direction] -- Start with the downwards images
+    self.flip = possibleSprites[self.playerSprite]["initialFlip"]
     self.scale = scale or 2
     self.timeElapsed = 0
     self.frameDuration = 0.1
-    self.imageSet = images
     self.projectiles = {}
     self.sound = love.audio.newSource("laser.mp3", "static")
     return self
@@ -49,30 +59,29 @@ function Player:update(dt)
     if love.keyboard.isDown('w') then
         self.y = self.y - self.speed * dt
         self.direction = 'up'
-        self.images = self.imageSet['up']
         self.flip = 1
         isMoving = true
     elseif love.keyboard.isDown('s') then
         self.y = self.y + self.speed * dt
         self.direction = 'down'
-        self.images = self.imageSet['down']
         self.flip = 1
         isMoving = true
     end
 
     if love.keyboard.isDown('a') then
         self.x = self.x - self.speed * dt
-        self.direction = 'left'
-        self.images = self.imageSet['left']
+        self.direction = 'sideways'
         self.flip = -1
         isMoving = true
     elseif love.keyboard.isDown('d') then
         self.x = self.x + self.speed * dt
-        self.direction = 'right'
-        self.images = self.imageSet['right']
+        self.direction = 'sideways'
         self.flip = 1
         isMoving = true
     end
+
+    -- Update the images based on the direction
+    self.images = playerImages[self.playerSprite][self.direction]
 
     if love.keyboard.isDown('space') then
         self.sound:play()
@@ -112,17 +121,9 @@ function Player:draw()
     end
 end
 
-
---this is where the projectile is created. an object is created everytime a player shoots something
---have fun with this :)
---next step is to add missle sprites or laser sprites :D
--- saif bayyari
---8/13/2024
-
 function Player:shoot()
     local projectile = Projectile:new(self.x, self.y, self.direction, 1000, 10)
     table.insert(self.projectiles, projectile)
 end
 
 return Player
-

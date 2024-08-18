@@ -48,8 +48,8 @@ function SceneManager:createScene(data)
             end
 
             if data.type == "game" then
-                player = Player:new(data.playerStart.x or 400, data.playerStart.y or 300, 200, 2)
-                npc = NPC:new(data.npcs[1].x, data.npcs[1].y, 1000, 0.5)  -- Assuming first NPC
+                player = Player:new(data.playerStart.x or 400, data.playerStart.y or 300, "man", 200, 2)
+                npc = NPC:new(data.npcs[1].x, data.npcs[1].y, "pacman", 1000, 0.5)  -- Assuming first NPC
                 npc:setBehavior('follow', player)
                 if data.tilemap then
                     gameMap = tilemap
