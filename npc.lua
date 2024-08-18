@@ -15,20 +15,20 @@ end
 
 local possibleNPCS = {
     ["pacman"] = {
-        ["initialFlip"] = 1
+        ["defaultSidewaysDirection"] = "left" -- or "right"
     }
 }
 
 -- Table to store NPC images
 local npcImages = {}
 
-for value, _ in pairs(possibleNPCS) do
+for npcName, _ in pairs(possibleNPCS) do
     -- Create a table for the current NPC type
-    npcImages[value] = {
-        up = loadImages("characters/"..value .. "/down", 0, 0),
-        down = loadImages("characters/"..value .. "/down", 0, 0),
-        left = loadImages("characters/"..value .. "/down", 0, 0),
-        right = loadImages("characters/"..value .. "/down", 0, 0),
+    npcImages[npcName] = {
+        ["up"] = loadImages("characters/"..npcName .. "/up", 0, 0),
+        ["down"] = loadImages("characters/"..npcName .. "/down", 0, 0),
+        ["left"] = loadImages("characters/"..npcName .. "/left", 0, 0),
+        ["right"] = loadImages("characters/"..npcName .. "/right", 0, 0),
     }
 end
 
@@ -44,7 +44,11 @@ function NPC:new(x, y, npc, speed, scale)
     self.direction = 'down'
     self.frame = 1
     self.images = npcImages[self.npc][self.direction] -- Start with the downwards images
-    self.flip = possibleNPCS[self.npc].initialFlip -- Initialize flip based on NPC settings
+    
+    -- Set flip value based on defaultSidewaysDirection
+    local defaultDirection = possibleNPCS[self.npc]["defaultSidewaysDirection"]
+    self.flip = (defaultDirection == "left") and -1 or 1
+    
     self.scale = scale or 2
     self.timeElapsed = 0
     self.frameDuration = 0.1
@@ -70,7 +74,7 @@ function NPC:update(dt)
             end
         end
         self.images = npcImages[self.npc][self.direction]
-        self.flip = possibleNPCS[self.npc].initialFlip -- Set flip based on NPC settings
+        self.flip = possibleNPCS[self.npc]["defaultSidewaysDirection"] == "left" and -1 or 1
         isMoving = true
 
     elseif self.behavior == 'follow' and self.target then
@@ -78,11 +82,11 @@ function NPC:update(dt)
         if self.x < self.target.x then
             self.x = self.x + self.speed * dt
             self.direction = 'right'
-            self.flip = -1  -- Flip to face right
+            self.flip = 1  -- Face right
         elseif self.x > self.target.x then
             self.x = self.x - self.speed * dt
             self.direction = 'left'
-            self.flip = 1  -- Default orientation, facing left
+            self.flip = -1  -- Face left
         end
 
         if self.y < self.target.y then

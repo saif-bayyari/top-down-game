@@ -19,7 +19,7 @@ end
 
 local possibleSprites = {
     ["man"] = {
-        ["initialFlip"] = 1
+        ["defaultSidewaysDirection"] = "right" -- or "left"
     }
 }
 
@@ -44,7 +44,11 @@ function Player:new(x, y, playerSprite, speed, scale)
     self.direction = 'down'
     self.frame = 1
     self.images = playerImages[self.playerSprite][self.direction] -- Start with the downwards images
-    self.flip = possibleSprites[self.playerSprite]["initialFlip"]
+
+    -- Set flip value based on defaultSidewaysDirection
+    local defaultDirection = possibleSprites[self.playerSprite]["defaultSidewaysDirection"]
+    self.flip = (defaultDirection == "left") and -1 or 1
+
     self.scale = scale or 2
     self.timeElapsed = 0
     self.frameDuration = 0.1
@@ -71,12 +75,12 @@ function Player:update(dt)
     if love.keyboard.isDown('a') then
         self.x = self.x - self.speed * dt
         self.direction = 'sideways'
-        self.flip = -1
+        self.flip = -1 -- Flip to left
         isMoving = true
     elseif love.keyboard.isDown('d') then
         self.x = self.x + self.speed * dt
         self.direction = 'sideways'
-        self.flip = 1
+        self.flip = 1 -- Flip to right
         isMoving = true
     end
 
