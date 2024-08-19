@@ -32,23 +32,21 @@ for npcName, _ in pairs(possibleNPCS) do
     }
 end
 
+
+
 local NPC = {}
 NPC.__index = NPC
 
-function NPC:new(x, y, npc, speed, scale)
+function NPC:new(x, y, sprite, speed, scale)
     local self = setmetatable({}, NPC)
     self.x = x
     self.y = y
-    self.npc = npc
+    self.sprite = sprite
     self.speed = speed or 100
     self.direction = 'down'
     self.frame = 1
-    self.images = npcImages[self.npc][self.direction] -- Start with the downwards images
-    
-    -- Set flip value based on defaultSidewaysDirection
-    local defaultDirection = possibleNPCS[self.npc]["defaultSidewaysDirection"]
-    self.flip = (defaultDirection == "left") and -1 or 1
-    
+    self.images = npcImages[sprite][self.direction] -- Start with the downwards images
+    self.flip = 1
     self.scale = scale or 2
     self.timeElapsed = 0
     self.frameDuration = 0.1
@@ -64,17 +62,16 @@ function NPC:update(dt)
         -- Example patrol logic (moves up and down)
         if self.direction == 'down' then
             self.y = self.y + self.speed * dt
-            if self.y > 400 then  -- Example boundary
+            if self.y > 550 then  -- Example boundary
                 self.direction = 'up'
             end
         elseif self.direction == 'up' then
             self.y = self.y - self.speed * dt
-            if self.y < 100 then  -- Example boundary
+            if self.y < 10 then  -- Example boundary
                 self.direction = 'down'
             end
         end
-        self.images = npcImages[self.npc][self.direction]
-        self.flip = possibleNPCS[self.npc]["defaultSidewaysDirection"] == "left" and -1 or 1
+        self.images = npcImages[self.sprite][self.direction]
         isMoving = true
 
     elseif self.behavior == 'follow' and self.target then
@@ -82,11 +79,9 @@ function NPC:update(dt)
         if self.x < self.target.x then
             self.x = self.x + self.speed * dt
             self.direction = 'right'
-            self.flip = 1  -- Face right
         elseif self.x > self.target.x then
             self.x = self.x - self.speed * dt
             self.direction = 'left'
-            self.flip = -1  -- Face left
         end
 
         if self.y < self.target.y then
@@ -97,7 +92,7 @@ function NPC:update(dt)
             self.direction = 'up'
         end
 
-        self.images = npcImages[self.npc][self.direction]
+        self.images = npcImages[self.sprite][self.direction]
         isMoving = true
     end
 

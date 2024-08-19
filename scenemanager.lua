@@ -69,6 +69,7 @@ function SceneManager:createGameScene(data)
         if data.npcs then
             for _, npcData in ipairs(data.npcs) do
                 local npc = NPC:new(npcData.x, npcData.y, npcData.type, npcData.speed, npcData.scale)
+                npc:setBehavior("patrol", player)
                 table.insert(npcs, npc)
             end
         end
