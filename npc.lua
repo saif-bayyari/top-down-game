@@ -32,8 +32,6 @@ for npcName, _ in pairs(possibleNPCS) do
     }
 end
 
-
-
 local NPC = {}
 NPC.__index = NPC
 
@@ -59,7 +57,7 @@ function NPC:update(dt)
     local isMoving = false
 
     if self.behavior == 'patrol' then
-        -- Example patrol logic (moves up and down)
+        -- Patrol logic with bouncing back
         if self.direction == 'down' then
             self.y = self.y + self.speed * dt
             if self.y > 550 then  -- Example boundary
@@ -75,21 +73,37 @@ function NPC:update(dt)
         isMoving = true
 
     elseif self.behavior == 'follow' and self.target then
-        -- Example following logic (follows the player)
-        if self.x < self.target.x then
-            self.x = self.x + self.speed * dt
-            self.direction = 'right'
-        elseif self.x > self.target.x then
-            self.x = self.x - self.speed * dt
-            self.direction = 'left'
+        -- Following logic with bouncing
+        local dx = self.target.x - self.x
+        local dy = self.target.y - self.y
+        local distance = math.sqrt(dx * dx + dy * dy)
+
+        if distance > 0 then
+            local moveX = (dx / distance) * self.speed * dt
+            local moveY = (dy / distance) * self.speed * dt
+
+            -- Update position
+            self.x = self.x + moveX
+            self.y = self.y + moveY
+
+            -- Determine direction based on movement
+            if math.abs(dx) > math.abs(dy) then
+                self.direction = (moveX > 0) and 'right' or 'left'
+            else
+                self.direction = (moveY > 0) and 'down' or 'up'
+            end
+
+            -- Set flip based on direction
+            self.flip = (self.direction == 'left') and -1 or 1
         end
 
-        if self.y < self.target.y then
-            self.y = self.y + self.speed * dt
-            self.direction = 'down'
-        elseif self.y > self.target.y then
-            self.y = self.y - self.speed * dt
-            self.direction = 'up'
+        -- Check bounds and reverse direction if necessary
+        if self.x < 10 or self.x > 790 then  -- Example horizontal boundaries
+            self.direction = (self.direction == 'right') and 'left' or 'right'
+        end
+
+        if self.y < 10 or self.y > 550 then  -- Example vertical boundaries
+            self.direction = (self.direction == 'down') and 'up' or 'down'
         end
 
         self.images = npcImages[self.sprite][self.direction]

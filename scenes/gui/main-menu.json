@@ -1,6 +1,6 @@
 {
     "type": "gui",
-    "backgroundColor": [0.1, 0.1, 0.1],
+    "backgroundColor": [0.2, 0.2, 0.2],
     "guiElements": [
         {
             "type": "button",
@@ -12,6 +12,16 @@
             "elementColor": [0.0, 0.5, 1.0],
             "fontColor": [1.0, 1.0, 1.0],
             "action": "goToZone1"
+        },
+
+        {
+            "type": "label",
+            "x": 100,
+            "y": 150,
+            "text": "Vibe Check",
+            "fontSize": 40,
+            "fontColor": [1.0, 1.0, 1.0],
+            "alignment": "center"
         }
     ]
 }

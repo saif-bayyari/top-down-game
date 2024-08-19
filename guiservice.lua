@@ -9,6 +9,38 @@ function GUIService:drawButton(x, y, width, height, text, elementColor, fontColo
     love.graphics.print(text, x + (width / 2) - (love.graphics.getFont():getWidth(text) / 2), y + (height / 2) - (love.graphics.getFont():getHeight(text) / 2))
 end
 
+
+function GUIService:drawLabel(x, y, text, fontSize, fontColor, alignment)
+    -- Set the font size
+    local myFont = love.graphics.newFont("fonts/Mekon-Gradient.ttf", fontSize)
+    love.graphics.setFont(myFont)
+    
+    -- Set the font color
+    love.graphics.setColor(fontColor)
+    
+    -- Default alignment if none is provided
+    alignment = alignment or 'left'
+    
+    -- Calculate the width and height of the text
+    local textWidth = myFont:getWidth(text)
+    local textHeight = myFont:getHeight()
+    
+    -- Adjust x based on alignment
+    if alignment == 'center' then
+        x = x - textWidth / 2
+    elseif alignment == 'right' then
+        x = x - textWidth
+    end
+    
+    -- Draw the text
+    love.graphics.print(text, x, y)
+    
+    -- Optionally, you can draw a rectangle around the label to visualize its bounds
+    -- Uncomment the following line if you want to see the label's boundary
+    -- love.graphics.rectangle('line', x, y, textWidth, textHeight)
+end
+
+
 -- Handle mouse press events
 function GUIService:handleMousePressed(elements, actionCallback)
     for _, element in ipairs(elements) do
