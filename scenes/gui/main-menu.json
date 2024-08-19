@@ -1,0 +1,17 @@
+{
+    "type": "gui",
+    "backgroundColor": [0.1, 0.1, 0.1],
+    "guiElements": [
+        {
+            "type": "button",
+            "x": 100,
+            "y": 150,
+            "width": 200,
+            "height": 50,
+            "text": "Go to Zone 1",
+            "elementColor": [0.0, 0.5, 1.0],
+            "fontColor": [1.0, 1.0, 1.0],
+            "action": "goToZone1"
+        }
+    ]
+}

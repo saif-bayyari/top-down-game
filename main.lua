@@ -1,34 +1,30 @@
--- Require necessary modules
-local Player = require "Player"
-local SceneManager = require "SceneManager"
-local NPC = require "NPC"
+-- main.lua
+local SceneManager = require("SceneManager")
+local json = require("dkjson")
 
--- Global variable to hold the SceneManager instance
+-- Create a global instance of SceneManager
 local sceneManager
 
--- Initialize the SceneManager and other resources
 function love.load()
-    -- Create a SceneManager instance with a starting scene
-    sceneManager = SceneManager:new("scene1")  -- Assuming "scene1" is the starting scene
-
-    -- Load the initial scene
-    sceneManager:load()
+    -- Initialize SceneManager and load scenes
+    sceneManager = SceneManager:getInstance()
+    sceneManager:new("main-menu") -- Set the initial scene to "main-menu" or your desired starting scene
 end
 
--- Update the current scene and check for input
 function love.update(dt)
-    -- Update the current scene
-    sceneManager:update(dt)
-
-    -- Example: Switch to another scene when the spacebar is pressed
-    -- This part is for manual testing; adjust or remove as needed
-    if love.keyboard.isDown("space") then
-        -- Example transition to "scene3"
-        sceneManager:setScene("scene3")  -- Change to the desired scene
+    if sceneManager then
+        sceneManager:update(dt)
     end
 end
 
--- Draw the current scene
 function love.draw()
-    sceneManager:draw()
+    if sceneManager then
+        sceneManager:draw()
+    end
+end
+
+function love.mousepressed(x, y, button)
+    if sceneManager then
+        sceneManager:mousepressed(x, y, button)
+    end
 end
