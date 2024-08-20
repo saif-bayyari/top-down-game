@@ -25,10 +25,10 @@ local npcImages = {}
 for npcName, _ in pairs(possibleNPCS) do
     -- Create a table for the current NPC type
     npcImages[npcName] = {
-        ["up"] = loadImages("characters/"..npcName .. "/up", 0, 0),
+        ["up"] = loadImages("characters/"..npcName .. "/down", 0, 0),
         ["down"] = loadImages("characters/"..npcName .. "/down", 0, 0),
-        ["left"] = loadImages("characters/"..npcName .. "/left", 0, 0),
-        ["right"] = loadImages("characters/"..npcName .. "/right", 0, 0),
+        ["left"] = loadImages("characters/"..npcName .. "/down", 0, 0),
+        ["right"] = loadImages("characters/"..npcName .. "/down", 0, 0),
     }
 end
 
@@ -61,11 +61,13 @@ function NPC:update(dt)
         if self.direction == 'down' then
             self.y = self.y + self.speed * dt
             if self.y > 550 then  -- Example boundary
+                self.y = 550  -- Fix the position at the boundary
                 self.direction = 'up'
             end
         elseif self.direction == 'up' then
             self.y = self.y - self.speed * dt
             if self.y < 10 then  -- Example boundary
+                self.y = 10  -- Fix the position at the boundary
                 self.direction = 'down'
             end
         end
@@ -97,13 +99,22 @@ function NPC:update(dt)
             self.flip = (self.direction == 'left') and -1 or 1
         end
 
-        -- Check bounds and reverse direction if necessary
-        if self.x < 10 or self.x > 790 then  -- Example horizontal boundaries
-            self.direction = (self.direction == 'right') and 'left' or 'right'
+        -- Horizontal boundary check
+        if self.x < 10 then
+            self.x = 10  -- Fix the position at the boundary
+            self.direction = 'right'
+        elseif self.x > 790 then
+            self.x = 790  -- Fix the position at the boundary
+            self.direction = 'left'
         end
 
-        if self.y < 10 or self.y > 550 then  -- Example vertical boundaries
-            self.direction = (self.direction == 'down') and 'up' or 'down'
+        -- Vertical boundary check
+        if self.y < 10 then
+            self.y = 10  -- Fix the position at the boundary
+            self.direction = 'down'
+        elseif self.y > 550 then
+            self.y = 550  -- Fix the position at the boundary
+            self.direction = 'up'
         end
 
         self.images = npcImages[self.sprite][self.direction]
@@ -123,6 +134,7 @@ function NPC:update(dt)
         self.frame = 1
     end
 end
+
 
 function NPC:draw()
     local img = self.images[self.frame]

@@ -16,8 +16,8 @@
 
         {
             "type": "label",
-            "x": 100,
-            "y": 150,
+            "x": 300,
+            "y": 450,
             "text": "Vibe Check",
             "fontSize": 40,
             "fontColor": [1.0, 1.0, 1.0],

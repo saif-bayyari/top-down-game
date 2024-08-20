@@ -69,7 +69,7 @@ function SceneManager:createGameScene(data)
         if data.npcs then
             for _, npcData in ipairs(data.npcs) do
                 local npc = NPC:new(npcData.x, npcData.y, npcData.type, npcData.speed, npcData.scale)
-                npc:setBehavior("patrol", player)
+                npc:setBehavior("follow", player)
                 table.insert(npcs, npc)
             end
         end
@@ -123,6 +123,10 @@ function SceneManager:createGUIScene(data)
         for _, element in ipairs(guiElements) do
             if element.type == "button" then
                 GUIService:drawButton(element.x, element.y, element.width, element.height, element.text, element.elementColor, element.fontColor)
+            end
+
+            if element.type == "label" then
+                GUIService:drawLabel(element.x, element.y, element.text, element.fontSize, element.fontColor, element.alignment)
             end
         end
     end
