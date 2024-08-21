@@ -58,8 +58,15 @@ function SceneManager:createGameScene(data)
     local gameMap
     local player
     local npcs = {}
+    local camera = require 'libraries/camera'
+    local cam = camera()
+
 
     local function load()
+
+        
+
+
         if data.tilemap then
             gameMap = sti(data.tilemap)
         end
@@ -81,19 +88,74 @@ function SceneManager:createGameScene(data)
         end
         for _, npc in ipairs(npcs) do
             npc:update(dt)
+            if npc.behavior == "killed_player" then
+                self:setScene("death-screen")
+            end
         end
+        cam:lookAt(player.x, player.y)
+        local w = love.graphics.getWidth()
+        local h = love.graphics.getHeight()
+
+        if cam.x < w/2 then
+            cam.x = w/2
+        end
+
+        if cam.y < h/2 then
+            cam.y = h/2
+        end
+
+        local mapW = gameMap.width * gameMap.tilewidth
+        local mapH = gameMap.height * gameMap.tileheight
+    
+        -- Right border
+        if cam.x > (mapW - w/2) then
+            cam.x = (mapW - w/2)
+        end
+        -- Bottom border
+        if cam.y > (mapH - h/2) then
+            cam.y = (mapH - h/2)
+        end
+
+        local playerWidth = 64  -- Replace with the actual player sprite width
+        local playerHeight = 64 -- Replace with the actual player sprite height
+
+        if player.x > mapW - playerWidth / 2 then
+            player.x = mapW - playerWidth / 2
+        end
+
+        if player.x < playerWidth / 2 then
+            player.x = playerWidth / 2
+        end
+
+        if player.y > mapH - playerHeight / 2 then
+            player.y = mapH - playerHeight / 2
+        end
+
+        if player.y < playerHeight / 2 then
+            player.y = playerHeight / 2
+        end
+
+
+        
+
+
     end
 
     local function draw()
-        if gameMap then
-            gameMap:draw()
-        end
-        if player then
-            player:draw()
-        end
-        for _, npc in ipairs(npcs) do
-            npc:draw()
-        end
+
+        cam:attach()
+
+            if gameMap then
+                gameMap:drawLayer(gameMap.layers["Tile Layer 1"])
+                gameMap:drawLayer(gameMap.layers["tree"])
+            end
+            if player then
+                player:draw()
+            end
+            for _, npc in ipairs(npcs) do
+                npc:draw()
+            end
+        cam:detach()
     end
 
     return {
@@ -110,8 +172,21 @@ function SceneManager:createGUIScene(data)
 
     local function load()
         for _, element in ipairs(data.guiElements) do
+            -- Insert each element into the guiElements table
             table.insert(guiElements, element)
+    
+            -- Check if the element has an audio property
+            if element.audio then
+                -- Load and play the audio
+                sound = love.audio.newSource(element.audio, "stream")
+                sound:play()
+    
+                -- Optionally, you may want to quit the application after playing
+                -- For now, you can comment this line out or use it based on your logic
+                -- love.event.quit()
+            end
         end
+        
     end
 
     local function update(dt)
@@ -127,6 +202,10 @@ function SceneManager:createGUIScene(data)
 
             if element.type == "label" then
                 GUIService:drawLabel(element.x, element.y, element.text, element.fontSize, element.fontColor, element.alignment)
+            end
+
+            if element.type == "image" then
+                GUIService:drawImage(element.path, element.x, element.y, element.scale)
             end
         end
     end
@@ -172,6 +251,7 @@ function SceneManager:update(dt)
     if scene and scene.update then
         scene.update(dt)
     end
+    
 end
 
 -- Draw the current scene
