@@ -13,37 +13,37 @@ local function loadImages(folder, startFrame, endFrame)
     return images
 end
 
-local possibleNPCS = {
+local possiblePacMans = {
     ["pacman"] = {
         ["defaultSidewaysDirection"] = "left" -- or "right"
     }
 }
 
--- Table to store NPC images
-local npcImages = {}
+-- Table to store PacMan images
+local pacManImages = {}
 
-for npcName, _ in pairs(possibleNPCS) do
-    -- Create a table for the current NPC type
-    npcImages[npcName] = {
-        ["up"] = loadImages("characters/"..npcName .. "/down", 0, 0),
-        ["down"] = loadImages("characters/"..npcName .. "/down", 0, 0),
-        ["left"] = loadImages("characters/"..npcName .. "/down", 0, 0),
-        ["right"] = loadImages("characters/"..npcName .. "/down", 0, 0),
+for pacManName, _ in pairs(possiblePacMans) do
+    -- Create a table for the current PacMan type
+    pacManImages[pacManName] = {
+        ["up"] = loadImages("characters/"..pacManName .. "/down", 0, 0),
+        ["down"] = loadImages("characters/"..pacManName .. "/down", 0, 0),
+        ["left"] = loadImages("characters/"..pacManName .. "/down", 0, 0),
+        ["right"] = loadImages("characters/"..pacManName .. "/down", 0, 0),
     }
 end
 
-local NPC = {}
-NPC.__index = NPC
+local PacMan = {}
+PacMan.__index = PacMan
 
-function NPC:new(x, y, sprite, speed, scale)
-    local self = setmetatable({}, NPC)
+function PacMan:new(x, y, sprite, speed, scale)
+    local self = setmetatable({}, PacMan)
     self.x = x
     self.y = y
     self.sprite = sprite
     self.speed = speed or 100
     self.direction = 'down'
     self.frame = 1
-    self.images = npcImages[sprite][self.direction] -- Start with the downwards images
+    self.images = pacManImages[sprite][self.direction] -- Start with the downwards images
     self.flip = 1
     self.scale = scale or 2
     self.timeElapsed = 0
@@ -53,7 +53,7 @@ function NPC:new(x, y, sprite, speed, scale)
     return self
 end
 
-function NPC:update(dt)
+function PacMan:update(dt)
     local isMoving = false
 
     if self.behavior == 'patrol' then
@@ -71,7 +71,7 @@ function NPC:update(dt)
                 self.direction = 'down'
             end
         end
-        self.images = npcImages[self.sprite][self.direction]
+        self.images = pacManImages[self.sprite][self.direction]
         isMoving = true
 
     elseif self.behavior == 'follow' and self.target then
@@ -117,7 +117,7 @@ function NPC:update(dt)
             self.direction = 'up'
         end
 
-        self.images = npcImages[self.sprite][self.direction]
+        self.images = pacManImages[self.sprite][self.direction]
         isMoving = true
     end
 
@@ -135,8 +135,7 @@ function NPC:update(dt)
     end
 end
 
-
-function NPC:draw()
+function PacMan:draw()
     local img = self.images[self.frame]
     if img then
         love.graphics.draw(img, self.x, self.y, 0, self.flip * self.scale, self.scale, img:getWidth() / 2, img:getHeight() / 2)
@@ -145,8 +144,8 @@ function NPC:draw()
     end
 end
 
--- Method to set the NPC's behavior (e.g., 'patrol', 'follow')
-function NPC:setBehavior(behavior, target)
+-- Method to set the PacMan's behavior (e.g., 'patrol', 'follow')
+function PacMan:setBehavior(behavior, target)
     self.behavior = behavior
     if behavior == 'follow' then
         self.target = target
@@ -155,4 +154,4 @@ function NPC:setBehavior(behavior, target)
     end
 end
 
-return NPC
+return PacMan

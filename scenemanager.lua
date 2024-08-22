@@ -2,14 +2,18 @@
 local json = require("dkjson")
 local sti = require('libraries/sti')
 local Player = require "Player"
-local NPC = require "NPC"
+local PacMan = require "pacman"
 local GUIService = require "GUIService"
 local love = require "love"
+local PacMan = require "pacman"
+local Character = require "character"
 
 local SceneManager = {}
 SceneManager.__index = SceneManager
 
 local instance
+
+local scale = 1.5
 
 -- Singleton pattern
 function SceneManager:getInstance()
@@ -18,6 +22,8 @@ function SceneManager:getInstance()
         instance.currentScene = nil
         instance.scenes = {} -- Initialize scenes
         instance.guiScenes = {} -- Initialize GUI scenes
+        instance.player = Player:new(400, 80, 200, scale)
+        instance.pacman = PacMan:new(300, 70,"pacman", 500,2)
     end
     return instance
 end
@@ -32,9 +38,7 @@ end
 -- Load scenes from JSON files
 function SceneManager:loadScenes()
     -- Load game scenes
-    self:loadSceneDirectory("scenes/game", self.scenes, "createGameScene")
-
-    -- Load GUI scenes
+    self:loadSceneDirectory("scenes/game", self.scenes, "createGameScene")   -- Load GUI scenes
     self:loadSceneDirectory("scenes/gui", self.guiScenes, "createGUIScene")
 end
 
@@ -56,31 +60,48 @@ end
 -- Create a game scene from JSON data
 function SceneManager:createGameScene(data)
     local gameMap
-    local player
-    local npcs = {}
+
+
+    --STATEFUL NPCs: PLAYER, PACMAN, CHARACTERS
+    --STATELESS NPCS: GENERIC ENEMIES
+    local player = instance.player
+    local pacman = instance.pacman
+    local characters = {}
 
     local function load()
         if data.tilemap then
             gameMap = sti(data.tilemap)
         end
-        if data.playerStart then
-            player = Player:new(data.playerStart[1], data.playerStart[2], "man", 200, 2)
+        if data.playerStart and player then
+            player.x = data.playerStart[1]
+            player.y = data.playerStart[2]
         end
-        if data.npcs then
-            for _, npcData in ipairs(data.npcs) do
-                local npc = NPC:new(npcData.x, npcData.y, npcData.type, npcData.speed, npcData.scale)
-                npc:setBehavior("follow", player)
-                table.insert(npcs, npc)
-            end
+
+
+        if pacman then
+            pacman.x = 200
+            pacman.y = 200
+            pacman:setBehavior("patrol", player)
         end
+
+
+
+        --if data.npcs then
+        --    for _, npcData in ipairs(data.npcs) do
+         --       local npc = NPC:new(npcData.x, npcData.y, npcData.type, npcData.speed, npcData.scale)
+
+       --         npc:setBehavior("follow", player)
+       --         table.insert(npcs, npc)
+       --     end
+        --end
     end
 
     local function update(dt)
         if player then
             player:update(dt)
         end
-        for _, npc in ipairs(npcs) do
-            npc:update(dt)
+        if pacman then
+            pacman:update(dt)
         end
     end
 
@@ -91,8 +112,8 @@ function SceneManager:createGameScene(data)
         if player then
             player:draw()
         end
-        for _, npc in ipairs(npcs) do
-            npc:draw()
+        if pacman then
+            pacman:draw()
         end
     end
 
