@@ -11,6 +11,8 @@ local Character = require "character"
 local SceneManager = {}
 SceneManager.__index = SceneManager
 
+
+
 local instance
 
 local scale = 1.5
@@ -24,6 +26,7 @@ function SceneManager:getInstance()
         instance.guiScenes = {} -- Initialize GUI scenes
         instance.player = Player:new(400, 80, 200, scale)
         instance.pacman = PacMan:new(300, 70,"pacman", 500,2)
+        
     end
     return instance
 end
@@ -32,6 +35,18 @@ function SceneManager:new(initialScene)
     local self = self:getInstance()
     self.currentScene = initialScene
     self:loadScenes()
+    self.game_functions = {
+
+        transitionToScene = function(sceneName)
+            self:setScene(sceneName)
+        end,
+
+
+
+        
+
+
+    }
     return self
 end
 
@@ -139,15 +154,7 @@ function SceneManager:createGUIScene(data)
             table.insert(guiElements, element)
     
             -- Check if the element has an audio property
-            if element.audio then
-                -- Load and play the audio
-                sound = love.audio.newSource(element.audio, "stream")
-                sound:play()
-    
-                -- Optionally, you may want to quit the application after playing
-                -- For now, you can comment this line out or use it based on your logic
-                -- love.event.quit()
-            end
+            
         end
         
     end
@@ -193,9 +200,12 @@ function SceneManager:createGUIScene(data)
 end
 
 -- Perform actions based on the element's action
-function SceneManager:performAction(action)
-    if action == "goToZone1" then
-        self:setScene("zone1")
+function SceneManager:performAction(action, ...)
+    local func = self.game_functions[action]  -- Get the function from the table
+    if func then
+        func(...)  -- Call the function with variable parameters
+    else
+        print("Function not found: " .. func_name)
     end
 end
 

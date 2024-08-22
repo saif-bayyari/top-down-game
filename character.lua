@@ -1,8 +1,6 @@
 local Character = {}
 Character.__index = Character
 
-local Projectile = require "Projectile"
-
 local function loadImages(folder, startFrame, endFrame)
     local images = {}
     for i = startFrame, endFrame do
