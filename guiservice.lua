@@ -40,6 +40,22 @@ function GUIService:drawLabel(x, y, text, fontSize, fontColor, alignment)
     -- love.graphics.rectangle('line', x, y, textWidth, textHeight)
 end
 
+function GUIService:drawImage(path,x, y, scale)
+    -- Load the image from the specified path
+    local image = love.graphics.newImage(path)
+    
+    -- Set the image scale
+    local originalFilter = love.graphics.getDefaultFilter()
+    love.graphics.setDefaultFilter("nearest", "nearest")  -- Optional: Adjust the filter as needed
+    
+    -- Draw the image at the specified position with the specified scale
+    love.graphics.draw(image, x, y, 0, scale, scale)
+    
+    -- Reset the filter to its original setting
+    love.graphics.setDefaultFilter(originalFilter)
+end
+
+
 
 -- Handle mouse press events
 function GUIService:handleMousePressed(elements, actionCallback)

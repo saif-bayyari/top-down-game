@@ -1,0 +1,13 @@
+{
+    "type": "gui",
+    "guiElements": [
+        {
+            "type": "image",
+            "path": "images/pacmandeath.png",
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "audio": "audio/pacman.mp3"
+        }
+    ]
+}

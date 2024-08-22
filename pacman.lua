@@ -99,6 +99,10 @@ function PacMan:update(dt)
             self.flip = (self.direction == 'left') and -1 or 1
         end
 
+        if distance <= 6 then
+            self.behavior = "killed_player"
+        end
+
         -- Horizontal boundary check
         if self.x < 10 then
             self.x = 10  -- Fix the position at the boundary

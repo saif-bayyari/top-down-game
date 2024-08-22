@@ -69,6 +69,10 @@ function SceneManager:createGameScene(data)
     local characters = {}
 
     local function load()
+
+        
+
+
         if data.tilemap then
             gameMap = sti(data.tilemap)
         end
@@ -131,8 +135,21 @@ function SceneManager:createGUIScene(data)
 
     local function load()
         for _, element in ipairs(data.guiElements) do
+            -- Insert each element into the guiElements table
             table.insert(guiElements, element)
+    
+            -- Check if the element has an audio property
+            if element.audio then
+                -- Load and play the audio
+                sound = love.audio.newSource(element.audio, "stream")
+                sound:play()
+    
+                -- Optionally, you may want to quit the application after playing
+                -- For now, you can comment this line out or use it based on your logic
+                -- love.event.quit()
+            end
         end
+        
     end
 
     local function update(dt)
@@ -148,6 +165,10 @@ function SceneManager:createGUIScene(data)
 
             if element.type == "label" then
                 GUIService:drawLabel(element.x, element.y, element.text, element.fontSize, element.fontColor, element.alignment)
+            end
+
+            if element.type == "image" then
+                GUIService:drawImage(element.path, element.x, element.y, element.scale)
             end
         end
     end
@@ -193,6 +214,7 @@ function SceneManager:update(dt)
     if scene and scene.update then
         scene.update(dt)
     end
+    
 end
 
 -- Draw the current scene
