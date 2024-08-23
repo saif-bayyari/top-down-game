@@ -37,7 +37,7 @@ function SceneManager:new(initialScene)
     self:loadScenes()
     self.game_functions = {
 
-        transitionToScene = function(sceneName)
+        transition= function(sceneName)
             self:setScene(sceneName)
         end,
 
@@ -180,11 +180,18 @@ function SceneManager:createGUIScene(data)
         end
     end
 
-    local function mousepressed(x, y, button)
+    local function mousepressed(x, y, button, ...)
         if button == 1 then  -- Left mouse button
             GUIService:handleMousePressed(guiElements, function(element)
                 if element.action then
-                    self:performAction(element.action)
+                    -- Unpack the parameters' values
+                    local params = {}
+                    for _, value in pairs(element.action.parameters) do
+                        table.insert(params, value)
+                    end
+                    
+                    -- Call performAction with action type and unpacked parameters
+                    self:performAction(element.action.type, unpack(params))
                 end
             end)
         end

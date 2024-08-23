@@ -11,7 +11,12 @@
             "text": "Go to Zone 1",
             "elementColor": [0.0, 0.5, 1.0],
             "fontColor": [1.0, 1.0, 1.0],
-            "action": "goToZone1"
+            "action": {
+                "type": "transition",
+                "parameters": {
+                    "zone": "zone1"
+                }
+            }
         },
 
         {
