@@ -39,6 +39,7 @@ end
 function Player:die()
     self.isAlive = false
     print("Player has died")
+    self = nil
     -- You can add more logic here to remove the player from the game objects list
     -- or trigger any death animations, sound effects, etc.
 end
