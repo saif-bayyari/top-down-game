@@ -41,6 +41,11 @@ function SceneManager:new(initialScene)
             self:setScene(sceneName)
         end,
 
+        --killPlayer = function(player)
+          --  player.health = 0
+        
+        --end,
+
 
 
         
@@ -179,6 +184,15 @@ function SceneManager:createGUIScene(data)
             end
         end
     end
+
+
+
+
+
+
+
+
+
 
     local function mousepressed(x, y, button, ...)
         if button == 1 then  -- Left mouse button
