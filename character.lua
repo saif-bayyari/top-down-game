@@ -70,29 +70,56 @@ function Character:setDirection(direction)
     self.images = characterImages[self.characterSprite][self.direction]
 end
 
-function Character:move(dt, direction)
+function Character:move(dt)
     local isMoving = false
+    local dx, dy = 0, 0
 
-    if direction == 'up' then
-        self.y = self.y - self.speed * dt
-        self:setDirection("up")
-        isMoving = true
-    elseif direction == 'down' then
-        self.y = self.y + self.speed * dt
-        self:setDirection("down")
-        isMoving = true
-    elseif direction == 'left' then
-        self.x = self.x - self.speed * dt
+    -- Check for diagonal and regular movement
+    if love.keyboard.isDown("w") and love.keyboard.isDown("a") then
+        dx = dx - self.speed * dt
+        dy = dy - self.speed * dt
         self:setDirection("left")
         isMoving = true
-    elseif direction == 'right' then
-        self.x = self.x + self.speed * dt
+    elseif love.keyboard.isDown("w") and love.keyboard.isDown("d") then
+        dx = dx + self.speed * dt
+        dy = dy - self.speed * dt
+        self:setDirection("right")
+        isMoving = true
+    elseif love.keyboard.isDown("s") and love.keyboard.isDown("a") then
+        dx = dx - self.speed * dt
+        dy = dy + self.speed * dt
+        self:setDirection("left")
+        isMoving = true
+    elseif love.keyboard.isDown("s") and love.keyboard.isDown("d") then
+        dx = dx + self.speed * dt
+        dy = dy + self.speed * dt
+        self:setDirection("right")
+        isMoving = true
+    elseif love.keyboard.isDown("w") then
+        dy = dy - self.speed * dt
+        self:setDirection("up")
+        isMoving = true
+    elseif love.keyboard.isDown("s") then
+        dy = dy + self.speed * dt
+        self:setDirection("down")
+        isMoving = true
+    elseif love.keyboard.isDown("a") then
+        dx = dx - self.speed * dt
+        self:setDirection("left")
+        isMoving = true
+    elseif love.keyboard.isDown("d") then
+        dx = dx + self.speed * dt
         self:setDirection("right")
         isMoving = true
     end
 
+    -- Apply movement
+    self.x = self.x + dx
+    self.y = self.y + dy
+
     return isMoving
 end
+
 
 function Character:update(dt, direction)
     -- Call the move method
