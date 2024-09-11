@@ -2,11 +2,17 @@
 local GUIService = {}
 
 -- Draw a button with specified parameters
-function GUIService:drawButton(x, y, width, height, text, elementColor, fontColor)
+function GUIService:drawButton(x, y, width, height, text, elementColor, fontColor, fontSize)
+   
+
     love.graphics.setColor(elementColor)
     love.graphics.rectangle("fill", x, y, width, height)
+    
+    local myFont = love.graphics.newFont("fonts/Mekon-Gradient.ttf", fontSize)
+    love.graphics.setFont(myFont)
     love.graphics.setColor(fontColor)
-    love.graphics.print(text, x + (width / 2) - (love.graphics.getFont():getWidth(text) / 2), y + (height / 2) - (love.graphics.getFont():getHeight(text) / 2))
+
+    love.graphics.print(text, x + (width / 2) - (myFont:getWidth(text) / 2), y + (height / 2) - (myFont:getHeight(text) / 2))
 end
 
 

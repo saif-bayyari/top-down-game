@@ -172,7 +172,7 @@ function SceneManager:createGUIScene(data)
         love.graphics.clear(backgroundColor)
         for _, element in ipairs(guiElements) do
             if element.type == "button" then
-                GUIService:drawButton(element.x, element.y, element.width, element.height, element.text, element.elementColor, element.fontColor)
+                GUIService:drawButton(element.x, element.y, element.width, element.height, element.text, element.elementColor, element.fontColor, element.fontSize)
             end
 
             if element.type == "label" then
