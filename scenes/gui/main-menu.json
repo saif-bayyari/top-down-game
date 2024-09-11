@@ -4,8 +4,8 @@
     "guiElements": [
         {
             "type": "button",
-            "x": 100,
-            "y": 150,
+            "x": 300,
+            "y": 250,
             "width": 200,
             "height": 50,
             "text": "Go to Zone 1",
@@ -22,7 +22,7 @@
         {
             "type": "label",
             "x": 300,
-            "y": 450,
+            "y": 150,
             "text": "Vibe Check",
             "fontSize": 40,
             "fontColor": [1.0, 1.0, 1.0],
