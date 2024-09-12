@@ -4,19 +4,19 @@ Interactable.__index = Interactable
 
 -- Static table (class-level dictionary of interaction functions)
 Interactable.funcDict = {
-    default = function()
+    ["convo_object"] = function(interactable, player)
         print("Default interaction executed!")
     end,
 
-    greet = function()
+    ["greet"] = function()
         print("Hello! You interacted with the object.")
     end,
 
-    open = function()
+    ["open"] = function()
         print("Opening the object...")
     end,
 
-    close = function()
+    ["close"] = function()
         print("Closing the object...")
     end
 }

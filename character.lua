@@ -18,6 +18,9 @@ end
 local possibleSprites = {
     ["man"] = {
         ["defaultSidewaysDirection"] = "right"
+    },
+    ["pacman"] = {
+        ["defaultSidewaysDirection"] = "left" -- or "right"
     }
 }
 
@@ -25,21 +28,25 @@ local characterImages = {}
 
 for spriteName, _ in pairs(possibleSprites) do
     characterImages[spriteName] = {
-        ["up"] = loadImages("characters/" .. spriteName .. "/up", 11, 21),
-        ["down"] = loadImages("characters/" .. spriteName .. "/down", 0, 10),
-        ["sideways"] = loadImages("characters/" .. spriteName .. "/sideways", 22, 32)
+        ["up"] = loadImages("sprites/" .. spriteName .. "/up", 11, 21),
+        ["down"] = loadImages("sprites/" .. spriteName .. "/down", 0, 10),
+        ["sideways"] = loadImages("sprites/" .. spriteName .. "/sideways", 22, 32)
     }
 end
 
-function Character:new(x, y, characterSprite, speed, scale)
+function Character:new(x, y, characterSprite, speed, scale, initDirection, initAnimation)
     local self = setmetatable({}, Character)
     self.characterSprite = characterSprite
     self.x = x
     self.y = y
+    self.dx = 0
+    self.dy = 0
     self.speed = speed or 200
-    self.direction = 'down'
+    self.direction = "idle"
+    self.animation = "down"
     self.frame = 1
-    self.images = characterImages[self.characterSprite][self.direction]
+    self.images = characterImages[self.characterSprite][self.animation]
+    self.health = 100
 
     local defaultDirection = possibleSprites[self.characterSprite]["defaultSidewaysDirection"]
     self.flip = (defaultDirection == "left") and -1 or 1
@@ -51,85 +58,44 @@ function Character:new(x, y, characterSprite, speed, scale)
     return self
 end
 
-function Character:setDirection(direction)
-    -- This method will set the direction and update the sprite images accordingly.
-    self.direction = direction
-
-    if direction == "up" then
-        self.flip = 1
-    elseif direction == "down" then
-        self.flip = 1
-    elseif direction == "left" then
-        self.flip = -1
-        self.direction = "sideways"
-    elseif direction == "right" then
-        self.flip = 1
-        self.direction = "sideways"
-    end
-
-    self.images = characterImages[self.characterSprite][self.direction]
-end
-
-function Character:move(dt)
-    local isMoving = false
-    local dx, dy = 0, 0
-
-    -- Check for diagonal and regular movement
-    if love.keyboard.isDown("w") and love.keyboard.isDown("a") then
-        dx = dx - self.speed * dt
-        dy = dy - self.speed * dt
-        self:setDirection("left")
-        isMoving = true
-    elseif love.keyboard.isDown("w") and love.keyboard.isDown("d") then
-        dx = dx + self.speed * dt
-        dy = dy - self.speed * dt
-        self:setDirection("right")
-        isMoving = true
-    elseif love.keyboard.isDown("s") and love.keyboard.isDown("a") then
-        dx = dx - self.speed * dt
-        dy = dy + self.speed * dt
-        self:setDirection("left")
-        isMoving = true
-    elseif love.keyboard.isDown("s") and love.keyboard.isDown("d") then
-        dx = dx + self.speed * dt
-        dy = dy + self.speed * dt
-        self:setDirection("right")
-        isMoving = true
-    elseif love.keyboard.isDown("w") then
-        dy = dy - self.speed * dt
-        self:setDirection("up")
-        isMoving = true
-    elseif love.keyboard.isDown("s") then
-        dy = dy + self.speed * dt
-        self:setDirection("down")
-        isMoving = true
-    elseif love.keyboard.isDown("a") then
-        dx = dx - self.speed * dt
-        self:setDirection("left")
-        isMoving = true
-    elseif love.keyboard.isDown("d") then
-        dx = dx + self.speed * dt
-        self:setDirection("right")
-        isMoving = true
-    end
-
-    -- Apply movement
-    self.x = self.x + dx
-    self.y = self.y + dy
-
-    return isMoving
-end
 
 
-function Character:update(dt, direction)
-    -- Call the move method
-    local isMoving = self:move(dt, direction)
+
+function Character:update(dt)
+    -- Reset dx and dy to 0 at the beginning of each update
+    self.dx = 0
+    self.dy = 0
+
+    -- Set dx and dy based on direction
 
     
+    if self.direction == "up" then
+        self.dy = -self.speed
+        self.flip = 1
+        self.animation = "up"
+    elseif self.direction == "down" then
+        self.dy = self.speed
+        self.flip = 1
+        self.animation = "down"
+    elseif self.direction == "left" then
+        self.dx = -self.speed
+        self.flip = -1
+        self.animation = "sideways"
+    elseif self.direction == "right" then
+        self.dx = self.speed
+        self.flip = 1
+        self.animation = "sideways"
+    elseif self.direction == "idle" then
+        self.dx = 0
+        self.dy = 0
+    end
 
-  
-    -- Animate frames when moving
-    if isMoving then
+    self.images = characterImages[self.characterSprite][self.animation]
+
+    -- Factor in dt to ensure consistent movement speed
+    if self.dx ~= 0 or self.dy ~= 0 then
+        self.x = self.x + self.dx * dt
+        self.y = self.y + self.dy * dt
         self.timeElapsed = self.timeElapsed + dt
         if self.timeElapsed >= self.frameDuration then
             self.frame = self.frame + 1
@@ -139,9 +105,11 @@ function Character:update(dt, direction)
             self.timeElapsed = self.timeElapsed - self.frameDuration
         end
     else
+        -- Reset frame to 1 if the character is not moving
         self.frame = 1
     end
 end
+
 
 function Character:draw()
     local img = self.images[self.frame]

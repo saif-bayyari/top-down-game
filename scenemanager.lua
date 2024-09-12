@@ -2,10 +2,9 @@
 local json = require("dkjson")
 local sti = require('libraries/sti')
 local Player = require "Player"
-local PacMan = require "pacman"
 local GUIService = require "GUIService"
 local love = require "love"
-local PacMan = require "pacman"
+local Pacman = require "Pacman"
 local Character = require "character"
 
 local SceneManager = {}
@@ -25,7 +24,8 @@ function SceneManager:getInstance()
         instance.scenes = {} -- Initialize scenes
         instance.guiScenes = {} -- Initialize GUI scenes
         instance.player = Player:new(400, 80, 200, scale)
-        instance.pacman = PacMan:new(300, 70,"pacman", 500,2)
+        instance.pacman = Pacman:new(300, 70,500, 2)
+        instance.characters = {}
         
     end
     return instance
