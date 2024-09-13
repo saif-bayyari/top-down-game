@@ -23,7 +23,7 @@ function SceneManager:getInstance()
         instance.currentScene = nil
         instance.scenes = {} -- Initialize scenes
         instance.guiScenes = {} -- Initialize GUI scenes
-        instance.player = Player:new(400, 80, 200, scale)
+        instance.player = Player:new(400, 80, 100, scale)
         instance.pacman = Pacman:new(300, 70,500, 2)
         instance.characters = {}
         
