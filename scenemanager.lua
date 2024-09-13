@@ -46,6 +46,12 @@ function SceneManager:new(initialScene)
         
         --end,
 
+        --openStore = function(player, vendor)
+
+        --open the different kind of stores
+
+        --end
+
 
 
         
