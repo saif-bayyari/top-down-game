@@ -63,9 +63,7 @@ end
 
 function Character:update(dt)
     -- Reset dx and dy to 0 at the beginning of each update
-    self.dx = 0
-    self.dy = 0
-
+   
     -- Set dx and dy based on direction
 
     
@@ -94,8 +92,6 @@ function Character:update(dt)
 
     -- Factor in dt to ensure consistent movement speed
     if self.dx ~= 0 or self.dy ~= 0 then
-        self.x = self.x + self.dx * dt
-        self.y = self.y + self.dy * dt
         self.timeElapsed = self.timeElapsed + dt
         if self.timeElapsed >= self.frameDuration then
             self.frame = self.frame + 1
