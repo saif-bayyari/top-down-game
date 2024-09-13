@@ -74,6 +74,20 @@ end
 
 -- Assuming you have a `setDirection` method in your Player or Character class
 function Player:setDirection(direction)
+    local directions = {"up", "down", "left", "right", "idle"}
+    
+    -- Assert that the direction is valid
+    local isValidDirection = false
+    for _, validDirection in ipairs(directions) do
+        if direction == validDirection then
+            isValidDirection = true
+            break
+        end
+    end
+    
+    assert(isValidDirection, "Invalid direction: " .. tostring(direction))
+    
+    -- Set the direction if valid
     self.direction = direction
 end
 
