@@ -73,9 +73,7 @@ function Player:update(dt)
 end
 
 -- Assuming you have a `setDirection` method in your Player or Character class
-function Player:setDirection(direction)
-    self.direction = direction
-end
+
 
 
 
