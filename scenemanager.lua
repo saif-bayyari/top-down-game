@@ -6,6 +6,7 @@ local GUIService = require "GUIService"
 local love = require "love"
 local Pacman = require "Pacman"
 local Character = require "character"
+local wf = require "libraries/windfield"
 
 local SceneManager = {}
 SceneManager.__index = SceneManager
@@ -23,9 +24,10 @@ function SceneManager:getInstance()
         instance.currentScene = nil
         instance.scenes = {} -- Initialize scenes
         instance.guiScenes = {} -- Initialize GUI scenes
-        instance.player = Player:new(400, 80, 100, scale)
-        instance.pacman = Pacman:new(300, 70,500, 2)
+        instance.player = Player:new(400, 80, 150, scale)
+        instance.pacman = Pacman:new(300, 70,500, scale)
         instance.characters = {}
+        
         
     end
     return instance
@@ -86,25 +88,24 @@ end
 -- Create a game scene from JSON data
 function SceneManager:createGameScene(data)
     local gameMap
+    local worldWF
 
-
-    --STATEFUL NPCs: PLAYER, PACMAN, CHARACTERS
-    --STATELESS NPCS: GENERIC ENEMIES
     local player = instance.player
     local pacman = instance.pacman
     local characters = {}
+    local playerWF
 
     local function load()
 
         
-
-
         if data.tilemap then
             gameMap = sti(data.tilemap)
+            worldWF = wf.newWorld()
         end
         if data.playerStart and player then
             player.x = data.playerStart[1]
             player.y = data.playerStart[2]
+            playerWF = world:newRectangleCollider(player.x, player.y, 48, 48)
         end
 
 
@@ -112,26 +113,23 @@ function SceneManager:createGameScene(data)
             pacman.x = 200
             pacman.y = 200
             pacman:setBehavior("patrol", player)
+            pacman.direction = "idle"
         end
 
-
-
-        --if data.npcs then
-        --    for _, npcData in ipairs(data.npcs) do
-         --       local npc = NPC:new(npcData.x, npcData.y, npcData.type, npcData.speed, npcData.scale)
-
-       --         npc:setBehavior("follow", player)
-       --         table.insert(npcs, npc)
-       --     end
-        --end
     end
 
     local function update(dt)
         if player then
             player:update(dt)
         end
+        if playerWF then
+            playerWF:update(dt)---check this code
+        end
         if pacman then
             pacman:update(dt)
+        end
+        if world then
+            worldWF:update(dt) --- check this code
         end
     end
 
