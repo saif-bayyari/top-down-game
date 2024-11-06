@@ -105,7 +105,7 @@ function SceneManager:createGameScene(data)
         if data.playerStart and player then
             player.x = data.playerStart[1]
             player.y = data.playerStart[2]
-            playerWF = world:newRectangleCollider(player.x, player.y, 48, 48)
+            playerWF = worldWF:newRectangleCollider(player.x, player.y, 48, 48)
         end
 
 
@@ -121,9 +121,6 @@ function SceneManager:createGameScene(data)
     local function update(dt)
         if player then
             player:update(dt)
-        end
-        if playerWF then
-            playerWF:update(dt)---check this code
         end
         if pacman then
             pacman:update(dt)
